@@ -29,6 +29,11 @@ namespace _04_ETicaret.Persistence_.Repositories
             return query;
         }
 
+        public async Task<T> GetByIdAsync(object id)
+        {
+            return await Table.FindAsync(id) ?? throw new Exception("Entity not found");
+        }
+
         public async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, bool tracking = true)
         {
             var query = Table.AsQueryable();

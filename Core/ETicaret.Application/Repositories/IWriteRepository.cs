@@ -9,7 +9,7 @@ namespace _02_ETicaret.Application.Repositories
         bool UpdateAsync(T entity);
         bool Delete(T entity);
         bool DeleteRange(List<T> entities);
-        //bool Delete(int id);
+        Task<bool> DeleteAsync(int id);
         Task<int> SaveAsync();
     }
 }
