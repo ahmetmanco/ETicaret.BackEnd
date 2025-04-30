@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using _01_ETicaret.Domain.Base;
+﻿using _01_ETicaret.Domain.Base;
 using _02_ETicaret.Application.Repositories;
 using _04_ETicaret.Persistence_.Context;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +31,16 @@ namespace _04_ETicaret.Persistence_.Repositories
 
         public bool Delete(T entity)
         {
+            EntityEntry entry = Table.Remove(entity);
+            return entry.State == EntityState.Deleted;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var entity = await Table.FindAsync(id);
+            if (entity == null)
+                return false;
+
             EntityEntry entry = Table.Remove(entity);
             return entry.State == EntityState.Deleted;
         }
