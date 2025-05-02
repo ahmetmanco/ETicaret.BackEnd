@@ -2,6 +2,7 @@
 using _01_ETicaret.Domain.Entities;
 using _02_ETicaret.Application.Repositories;
 using _02_ETicaret.Application.VMs.Product;
+using _02_ETicaret.Application_.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +18,14 @@ namespace _05_ETicaret.API_.Controllers
     {
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
+        private readonly IFileService _fileService;
 
 
-        public ProductController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
+        public ProductController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IFileService fileService)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
+            _fileService = fileService;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -50,33 +53,13 @@ namespace _05_ETicaret.API_.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] ProductCreateVM product)
         {
-            string? imagePath = null;
-
-            if (product.Image != null)
-            {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
-
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
-
-                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(product.Image.FileName);
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await product.Image.CopyToAsync(stream);
-                }
-
-                imagePath = $"https://localhost:7275/uploads/{uniqueFileName}";
-            }
-
+            string? imageUrl = await _fileService.UploadAsync(product.Image);
             await _productWriteRepository.AddAsync(new Product
             {
                 Name = product.Name,
                 Price = product.Price,
                 Stock = product.Stock,
-                ProductImage = imagePath ,
-               
+                ProductImage = imageUrl
             });
 
             await _productWriteRepository.SaveAsync();
