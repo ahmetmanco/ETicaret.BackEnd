@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\03_ETicaret.Infrastructure\03_ETicaret.Infrastructure.csproj" />
     <ProjectReference Include="..\Core\ETicaret.Application\02_ETicaret.Application.csproj" />
-    <ProjectReference Include="..\Core\ETicaret.Domain\01_ETicaret.Domain.csproj" />
   </ItemGroup>
 
 </Project>

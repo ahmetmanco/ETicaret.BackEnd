@@ -9,6 +9,8 @@ using _02_ETicaret.Application.Repositories;
 using _04_ETicaret.Persistence_.Repositories.Customer;
 using _04_ETicaret.Persistence_.Repositories.Product;
 using _04_ETicaret.Persistence_.Repositories.Order;
+using _03_ETicaret.Infrastructure_.Services;
+using _02_ETicaret.Application_.Services;
 
 namespace _04_ETicaret.Persistence_.IoC
 {
@@ -26,6 +28,8 @@ namespace _04_ETicaret.Persistence_.IoC
 
             builder.RegisterType<OrderReadRepository>().As<IOrderReadRepository>().InstancePerLifetimeScope();
             builder.RegisterType<OrderWriteRepository>().As<IOrderWriteRepository>().InstancePerLifetimeScope();
+
+            builder.RegisterType<FileService>().As<IFileService>().InstancePerLifetimeScope();
 
             builder.Register(c =>
             {
