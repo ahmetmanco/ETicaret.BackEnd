@@ -13,6 +13,7 @@ namespace _01_ETicaret.Domain.Entities
         public int Stock { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public string? ProductImage { get; set; }
         public ICollection<Order>? Orders { get; set; }
     }
 }

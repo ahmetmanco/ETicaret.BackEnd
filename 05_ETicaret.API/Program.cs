@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using _02_ETicaret.Application.Validations.Product;
 using _03_ETicaret.Infrastructure_.Filters;
 using _04_ETicaret.Persistence_.Context;
@@ -13,8 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFlter>())
-    .ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true);
+builder.Services.AddControllers(options => options.Filters.Add<ValidationFlter>()).ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true).AddJsonOptions(o=>
+{
+    o.JsonSerializerOptions.IncludeFields = true;
+    o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
 
 
 builder.Services.AddFluentValidation(conf => 
@@ -54,7 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors();
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
