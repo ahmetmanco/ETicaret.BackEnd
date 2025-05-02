@@ -12,8 +12,8 @@ using _04_ETicaret.Persistence_.Context;
 namespace _04_ETicaret.Persistence_.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429124512_cd")]
-    partial class cd
+    [Migration("20250501214801_dd")]
+    partial class dd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,9 @@ namespace _04_ETicaret.Persistence_.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
+
+                    b.Property<string>("ProductImage")
+                        .HasColumnType("text");
 
                     b.Property<int>("Stock")
                         .HasColumnType("integer");
