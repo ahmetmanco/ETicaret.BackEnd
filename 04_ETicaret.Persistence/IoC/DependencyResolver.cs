@@ -10,7 +10,17 @@ using _04_ETicaret.Persistence_.Repositories.Customer;
 using _04_ETicaret.Persistence_.Repositories.Product;
 using _04_ETicaret.Persistence_.Repositories.Order;
 using _03_ETicaret.Infrastructure_.Services;
-using _02_ETicaret.Application_.Services;
+using _04_ETicaret.Persistence_.Repositories.File;
+using _02_ETicaret.Application_.Repositories.File;
+using _04_ETicaret.Persistence_.Repositories.ProductImageFile;
+using _02_ETicaret.Application_.Repositories.ProductImageFile;
+using _02_ETicaret.Application_.Repositories.InvoiceFile;
+using _04_ETicaret.Persistence_.Repositories.InvoiceFile;
+using _03_ETicaret.Infrastructure_.Services.Storage.Local;
+using _02_ETicaret.Application_.Abstractions.Storage.Local;
+using _03_ETicaret.Infrastructure_.Services.Storage;
+using _02_ETicaret.Application_.Abstractions.Storage;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace _04_ETicaret.Persistence_.IoC
 {
@@ -29,7 +39,14 @@ namespace _04_ETicaret.Persistence_.IoC
             builder.RegisterType<OrderReadRepository>().As<IOrderReadRepository>().InstancePerLifetimeScope();
             builder.RegisterType<OrderWriteRepository>().As<IOrderWriteRepository>().InstancePerLifetimeScope();
 
-            builder.RegisterType<FileService>().As<IFileService>().InstancePerLifetimeScope();
+            builder.RegisterType<FileReadRepository>().As<IFileReadRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<FileWriteRepository>().As<IFileWriteRepository>().InstancePerLifetimeScope();
+
+            builder.RegisterType<ProductImageReadRepository>().As<IProductImageReadRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductImageWriteRepository>().As<IProductImageWriteRepository>().InstancePerLifetimeScope();
+
+            builder.RegisterType<InvoicefileReadRepository>().As<IinvoiceReadRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<InvoicefileWriteRepository>().As<IinvoiceWriteRepository>().InstancePerLifetimeScope();
 
             builder.Register(c =>
             {
@@ -43,5 +60,6 @@ namespace _04_ETicaret.Persistence_.IoC
 
             base.Load(builder);
         }
+      
     }
 }
