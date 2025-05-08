@@ -10,7 +10,7 @@ namespace _01_ETicaret.Domain.Base
     {
 
         public DateTime CreatedDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
+        virtual public DateTime? UpdateDate { get; set; }
         public DateTime? DeletedDate { get; set; }
     }
 }

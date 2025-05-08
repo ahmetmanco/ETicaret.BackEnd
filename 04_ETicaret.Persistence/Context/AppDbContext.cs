@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using _01_ETicaret.Domain.Base;
 using _01_ETicaret.Domain.Entities;
+using _01_ETicaret.Domain_.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace _04_ETicaret.Persistence_.Context
@@ -19,6 +20,9 @@ namespace _04_ETicaret.Persistence_.Context
         public DbSet<Product> Productss { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<_01_ETicaret.Domain_.Entities.File> Files { get; set; }
+        public DbSet<ProductImageFile> ImageFiles { get; set; }
+        public DbSet<InvoiceFile> I { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
