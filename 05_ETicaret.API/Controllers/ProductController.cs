@@ -2,7 +2,7 @@
 using _01_ETicaret.Domain.Entities;
 using _02_ETicaret.Application.Repositories;
 using _02_ETicaret.Application.VMs.Product;
-using _02_ETicaret.Application_.Services;
+using _02_ETicaret.Application_.Abstractions.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +18,14 @@ namespace _05_ETicaret.API_.Controllers
     {
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
-        private readonly IFileService _fileService;
+        private readonly IStorageService _storage;
 
 
-        public ProductController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IFileService fileService)
+        public ProductController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IStorageService storage)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
-            _fileService = fileService;
+            _storage = storage;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -53,13 +53,13 @@ namespace _05_ETicaret.API_.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] ProductCreateVM product)
         {
-            string? imageUrl = await _fileService.UploadAsync(product.Image);
+            var images = await _storage.UploadAsync("files",product.Image);
             await _productWriteRepository.AddAsync(new Product
             {
                 Name = product.Name,
                 Price = product.Price,
                 Stock = product.Stock,
-                ProductImage = imageUrl
+                ProductImage = images.Select(x => x.pathOrContainerName).ToList()
             });
 
             await _productWriteRepository.SaveAsync();
@@ -88,8 +88,7 @@ namespace _05_ETicaret.API_.Controllers
                 {
                     await product.Image.CopyToAsync(stream);
                 }
-
-                product1.ProductImage = $"/uploads/{uniqueFileName}";
+                //product1.ProductImage = $"/uploads/{uniqueFileName}";
             }
 
             return Ok(await _productWriteRepository.SaveAsync());
