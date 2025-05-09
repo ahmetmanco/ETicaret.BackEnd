@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using _04_ETicaret.Persistence_.Context;
@@ -12,9 +13,11 @@ using _04_ETicaret.Persistence_.Context;
 namespace _04_ETicaret.Persistence_.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250509090436_vc")]
+    partial class vc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,21 +39,6 @@ namespace _04_ETicaret.Persistence_.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("OrderProduct");
-                });
-
-            modelBuilder.Entity("ProductProductImageFile", b =>
-                {
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("productImageFilesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProductsId", "productImageFilesId");
-
-                    b.HasIndex("productImageFilesId");
-
-                    b.ToTable("ProductProductImageFile");
                 });
 
             modelBuilder.Entity("_01_ETicaret.Domain.Entities.Customer", b =>
@@ -203,6 +191,11 @@ namespace _04_ETicaret.Persistence_.Migrations
                 {
                     b.HasBaseType("_01_ETicaret.Domain_.Entities.File");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("ProductId");
+
                     b.HasDiscriminator().HasValue("ProductImageFile");
                 });
 
@@ -221,21 +214,6 @@ namespace _04_ETicaret.Persistence_.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductProductImageFile", b =>
-                {
-                    b.HasOne("_01_ETicaret.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("_01_ETicaret.Domain_.Entities.ProductImageFile", null)
-                        .WithMany()
-                        .HasForeignKey("productImageFilesId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("_01_ETicaret.Domain.Entities.Order", b =>
                 {
                     b.HasOne("_01_ETicaret.Domain.Entities.Customer", "Customer")
@@ -246,9 +224,25 @@ namespace _04_ETicaret.Persistence_.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("_01_ETicaret.Domain_.Entities.ProductImageFile", b =>
+                {
+                    b.HasOne("_01_ETicaret.Domain.Entities.Product", "Product")
+                        .WithMany("productImageFiles")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("_01_ETicaret.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("_01_ETicaret.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("productImageFiles");
                 });
 #pragma warning restore 612, 618
         }

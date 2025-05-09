@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using _01_ETicaret.Domain.Base;
+using _01_ETicaret.Domain_.Entities;
 
 namespace _01_ETicaret.Domain.Entities
 {
@@ -15,5 +16,6 @@ namespace _01_ETicaret.Domain.Entities
         public decimal Price { get; set; }
         public List<string>? ProductImage { get; set; }
         public ICollection<Order>? Orders { get; set; }
+        public ICollection<ProductImageFile> productImageFiles { get; set; }
     }
 }
