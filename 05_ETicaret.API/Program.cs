@@ -9,6 +9,9 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using _03_ETicaret.Infrastructure_;
+using _03_ETicaret.Infrastructure_.Services.Storage.Local;
+using _03_ETicaret.Infrastructure_.Services.Storage.Azurex;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +24,14 @@ builder.Services.AddControllers(options => options.Filters.Add<ValidationFlter>(
     o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
 });
 
-
+//builder.Services.AddStorage();
 builder.Services.AddFluentValidation(conf => 
 conf.RegisterValidatorsFromAssemblyContaining<CreateProductValidation>());
 
 builder.Services.AddCors(opt =>
   opt.AddDefaultPolicy(
       policy =>
-      policy.WithOrigins("http://localhost:4200", "http://localhost:4200")
+      policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
       .AllowAnyHeader()
       .AllowAnyMethod()
   )
@@ -43,12 +46,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Services.AddInfrastructureservices();
+//builder.Services.AddStorage<LocalStorage>();
+builder.Services.AddStorage<AzureStorage>();
 
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
     builder.RegisterModule(new DependencyResolver());
 });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +65,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRouting();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
