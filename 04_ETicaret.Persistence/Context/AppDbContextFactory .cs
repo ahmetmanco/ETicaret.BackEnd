@@ -13,7 +13,7 @@ namespace _04_ETicaret.Persistence_.Context
         public AppDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ETicaret;Username=postgres;Password=123456");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=mydatabase;Username=myuser;Password=mypass");
 
             return new AppDbContext(optionsBuilder.Options);
         }

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using _03_ETicaret.Infrastructure_;
 using _03_ETicaret.Infrastructure_.Services.Storage.Local;
 using _03_ETicaret.Infrastructure_.Services.Storage.Azurex;
+using _02_ETicaret.Application_;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,17 +37,21 @@ builder.Services.AddCors(opt =>
       .AllowAnyMethod()
   )
 );
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+//AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // PostgreSQL için DbContext’i yapýlandýr
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+Console.WriteLine($"[Connection Test] {connectionString}");
 
 builder.Services.AddInfrastructureservices();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(_02_ETicaret.Application_.ServiceRegistration).Assembly);
+});
 //builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddStorage<AzureStorage>();
 

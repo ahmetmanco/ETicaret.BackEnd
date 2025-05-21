@@ -13,8 +13,8 @@ using _04_ETicaret.Persistence_.Context;
 namespace _04_ETicaret.Persistence_.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250507212920_a1")]
-    partial class a1
+    [Migration("20250521191319_Created_kubernetes")]
+    partial class Created_kubernetes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,21 @@ namespace _04_ETicaret.Persistence_.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("OrderProduct");
+                });
+
+            modelBuilder.Entity("ProductProductImageFile", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("productImageFilesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductsId", "productImageFilesId");
+
+                    b.HasIndex("productImageFilesId");
+
+                    b.ToTable("ProductProductImageFile");
                 });
 
             modelBuilder.Entity("_01_ETicaret.Domain.Entities.Customer", b =>
@@ -205,6 +220,21 @@ namespace _04_ETicaret.Persistence_.Migrations
                     b.HasOne("_01_ETicaret.Domain.Entities.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProductProductImageFile", b =>
+                {
+                    b.HasOne("_01_ETicaret.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("_01_ETicaret.Domain_.Entities.ProductImageFile", null)
+                        .WithMany()
+                        .HasForeignKey("productImageFilesId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
