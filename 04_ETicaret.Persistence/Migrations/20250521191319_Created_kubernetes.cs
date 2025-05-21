@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace _04_ETicaret.Persistence_.Migrations
 {
     /// <inheritdoc />
-    public partial class a1 : Migration
+    public partial class Created_kubernetes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -92,6 +92,30 @@ namespace _04_ETicaret.Persistence_.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductProductImageFile",
+                columns: table => new
+                {
+                    ProductsId = table.Column<int>(type: "integer", nullable: false),
+                    productImageFilesId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductProductImageFile", x => new { x.ProductsId, x.productImageFilesId });
+                    table.ForeignKey(
+                        name: "FK_ProductProductImageFile_Files_productImageFilesId",
+                        column: x => x.productImageFilesId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductProductImageFile_Productss_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Productss",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderProduct",
                 columns: table => new
                 {
@@ -124,19 +148,27 @@ namespace _04_ETicaret.Persistence_.Migrations
                 name: "IX_Orders_CustomerId",
                 table: "Orders",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductProductImageFile_productImageFilesId",
+                table: "ProductProductImageFile",
+                column: "productImageFilesId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Files");
-
-            migrationBuilder.DropTable(
                 name: "OrderProduct");
 
             migrationBuilder.DropTable(
+                name: "ProductProductImageFile");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "Productss");
