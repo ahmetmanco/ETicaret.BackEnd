@@ -11,7 +11,7 @@ namespace _03_ETicaret.Infrastructure_.Services.Storage
     public class StorageService : IStorageService
     {
         private readonly IStorage _storage;
-
+        
         public StorageService(IStorage storage)
         {
             _storage = storage;
